@@ -1,0 +1,25 @@
+<!--  <html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Producto</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css')}}">--> <!-- href="/static/css/style.css"  no se si va como lo puse o con solo esto -->
+<!-- </head>
+<body>
+    <main>  -->
+    {% extends "home.html" %}
+    {% block content %}
+        <h2>Crear Producto</h2>
+        <form method="POST">
+            <label>Nombre:</label>
+            <input type="text" name="nombre" required>
+            <label>Precio:</label>
+            <input type="number" name="precio" step="0.01" required>
+            <label>Imagen (URL):</label>
+            <input type="text" name="imagen">
+            <button type="submit">Crear</button>
+        </form>
+    {% endblock %}
+<!--
+    </main>
+</body>
+</html> -->

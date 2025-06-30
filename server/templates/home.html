@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Inicio</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"> <!-- href="/static/css/style.css"  no se si va como lo puse o con solo esto -->
+</head>
+<body>
+    <h1>Sistema gestion de ventas</h1>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('productos') }}">Ver productos</a></li>
+            <li><a href="{{ url_for('usuarios') }}">Ver usuarios</a></li>
+            <li><a href="{{ url_for('crear_producto') }}">Crear producto</a></li>
+            <!-- <li><a href="./crear_producto.html">Crear producto</a></li>  asi anda pero no se si es necesario hacerlo como arriba -->
+        </ul>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{% extends "home.html" %}
+{% block content %}
+<h1>Lista de Usuarios</h1>
+<ul>
+    {% for u in usuarios %}
+    <li>
+        <strong>{{ u.nombre }}</strong> <br>{{ u.email }}
+        
+        <!-- Botón para borrar usuario -->
+        <form action="{{ url_for('borrar_usuario', id=u.id) }}" method="post" style="display:inline;" onsubmit="return confirm('¿Estás seguro que querés borrar este usuario?');">
+            <button type="submit">Borrar</button>
+        </form>
+
+        <!-- Pedidos del usuario -->
+        {% if u.pedidos %}
+            <ul>
+                {% for pedido in u.pedidos %}
+                    <li>
+                        <strong>Pedido #{{ pedido.id }}</strong><br>
+                        Productos:
+                        <ul>
+                            {% for producto in pedido.productos %}
+                                <li>{{ producto }}</li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No tiene pedidos.</p>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

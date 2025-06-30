@@ -1,0 +1,17 @@
+{% extends "home.html" %}
+{% block title %}Modificar Producto{% endblock %}
+{% block content %}
+  <h2>Modificar Producto</h2>
+  <form action="{{ url_for('modificar_producto', id=producto.id) }}" method="post">
+      <label>Nombre:</label><br>
+      <input type="text" name="nombre" value="{{ producto.nombre }}" required><br><br>
+
+      <label>Precio:</label><br>
+      <input type="number" name="valor" value="{{ producto.valor }}" required step="0.01"><br><br>
+
+      <label>Imagen (URL):</label><br>
+      <input type="text" name="imagen" value="{{ producto.imagen }}"><br><br>
+
+      <button type="submit">Guardar cambios</button>
+  </form>
+{% endblock %}
