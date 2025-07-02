@@ -243,4 +243,4 @@ def reset_db():
 
 if __name__ == "__main__":
     productos_base()
-    app.run(debug=True)
+    app.run()
