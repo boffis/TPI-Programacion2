@@ -7,7 +7,7 @@ class Usuario (db.Model):
     contrasenia = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique = True, nullable = False)
     
-    pedidos = db.relationship("Pedido", backref="usuario", lazy=True)
+    pedidos = db.relationship("Pedido", backref="usuario", cascade="all, delete", lazy=True)
 
     def __repr__(self):
         return f"<Usuario {self.nombre}>"

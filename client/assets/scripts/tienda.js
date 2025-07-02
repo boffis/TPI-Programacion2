@@ -7,15 +7,14 @@ fetch('http://localhost:5000/productos', {method: "GET", headers: {"Accept": "ap
         return res.json();
     })
     .then(data => {
-        productos=data
-        console.log("Productos:", data);
+        
 
         
         localStorage.setItem("productos", JSON.stringify(data));
 
         const container = document.getElementById("cartas")
 
-        productos.forEach(producto =>{
+        data.forEach(producto =>{
             const carta = document.createElement("div")
 
             carta.className = "carta"

@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const contenedor = document.getElementById("usuario-boton");
-    const usuario = JSON.parse(localStorage.getItem("usuario"));
+    const usuario = JSON.parse(localStorage.getItem("usuario")) || null;
 
     if (usuario) {
     // Si está logueado

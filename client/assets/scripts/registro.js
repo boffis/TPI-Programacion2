@@ -80,21 +80,37 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
         
         if (validoNombre&&validoEmail&&validoPassword&&validoTerminos) {
-
+            
         fetch('http://localhost:5000/crear_usuario', {method: 'POST', headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
             nombre: nombre.value,
             email: email.value,
             contrasenia: password.value
         })})
-        .then(response => response.json())
+        .then(response => {
+            //si trae error THROW NEW ERROR, salta al catch
+            if (!response.ok) {
+                return response.json().then(data=>{
+                    throw new Error (data.error || "Hubo un error")
+                })
+            }
+            return response.json()
+        })
         .then(data => {
-        console.log('Respuesta del servidor:', data);
-        successMessage.textContent = "Registro exitoso";
-        form.reset();
+            // por el throww, si trae error el fetch, no entra al :then
+            // console.log('Respuesta del servidor:', data);
+            localStorage.setItem("usuario", JSON.stringify({
+                nombre:nombre.value,
+                email:email.value,
+                pedidos:[],
+                id:data.id
+            }))
+            window.location.replace("/tp-dos/client/index.html");
         })
         .catch(error => {
-        console.error('Error:', error);
+            // console.error('Error:', error);  
+            errEmail.textContent = error
+
         });
         
         } else {

@@ -2,22 +2,24 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <title>Carro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalle</title>
     <link rel="stylesheet" href="./assets/css/style.css">
     <script src="./assets/scripts/botonHeader.js"></script>
-    <script src="./assets/scripts/botonVenta.js"></script>
-    <script src="./assets/scripts/detalle.js"></script>
+    <script src="./assets/scripts/carrito.js"></script>
+    <script src="./assets/scripts/botonConfirmarVenta.js"></script>
+    <script src="./assets/scripts/cuentaManager.js"></script>
+    <script src="./assets/scripts/historialPedidos.js"></script>
 </head>
-<!-- IGNORAR POR AHORA!!! -->
 <body>
+        
     <header>
         <div class="contenedor">
             
             <a href="./index.html"><img src="./assets/fotos/escudo.png"  alt="logo" width="50"></a>
             
-            
             <div id="usuario-boton"></div>  
+
 
         </div>
             <nav>
@@ -31,16 +33,28 @@
             </nav>
 
     </header>
-    
-    <main class="detalle">
-        <div class="datos">
-            <h1 id="detalleNombre"></h1>
-            <p id="detallePrecio"></p>
-            <p id="detalleId"></p>
-            <button id="botonVenta"></button>
+
+
+    <main class="carrito">
+        <div class="datos_cuenta">
+            <div class="cuenta-manager">
+                <button id="boton_logout">Cerrar sesion</button>
+                <span id="cuenta_id"></span>
+                <h1 id="cuenta_nombre"></h1>
+                <h3 id="cuenta_email"></h3>
+                <button id="boton_borrar_cuenta">Borrar Cuenta</button>
+            </div>
+            <div class="historial_pedidos">
+            </div>
+
         </div>
-        <div class="imgdiv">
-            <img id="detalleImagen" src="" alt="Producto">
+        <div class="carrito_actual">
+            <div class="productos">
+                <!-- carrito.js renderiza todos los items actualmente en localstorage.carrito -->
+            </div>
+            <div class="container_boton">
+                
+            </div>
         </div>
     </main>
 
@@ -74,4 +88,8 @@
         </ul>
     </footer>
 </body>
-<!-- IGNORAR POR AHORA!!! -->
+
+<!--       _
+       .__(.)< (MEOW)
+        \___)   
+ ~~~~~~~~~~~~~~~~~~-->

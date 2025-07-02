@@ -5,15 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="./assets/css/style.css">
+    <script src="./assets/scripts/botonHeader.js"></script>
+    <script src="./assets/scripts/login.js"></script>
 </head>
 <body>
 
     <header>
-        <div>
+        <div class="contenedor">
         
-            <a href="./index.html"><img src="./assets/fotos/Logo.png"  alt="logo" width="50"></a>
+            <a href="./index.html"><img src="./assets/fotos/escudo.png"  alt="logo" width="50"></a>
             
-            <a href="./form.html"> <img class="logo-carrito" src="./assets/fotos/Carrito.png" alt="Link a carrito" width="30px"> </a>
+            <div id="usuario-boton"></div>  
         
         </div>
 
@@ -31,18 +33,18 @@
     <main class="login">
 
         <div class="form-container">
-            <h1>Iniciar sesion</h1>
             <form >
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="text">
+                    <input type="text" id="email">
                 </div>
 
                 <div class="form-group">
                     <label for="Contraseña">Contraseña</label>
-                    <input type="text">
+                    <input type="password" id="contrasenia">
                 </div>
-                <span class="error-message" id="login-error"></span>
+                <span class="login_error" id="login_error"></span>
+                <button type="submit">Iniciar sesion</button>
             </form>
             <a href="./registro.html">No tenes cuenta? Registrate aca!</a>
         </div>

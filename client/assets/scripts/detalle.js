@@ -8,7 +8,10 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("detalleNombre").textContent = producto.nombre;
         document.getElementById("detallePrecio").textContent = `$ ${producto.valor}`;
         document.getElementById("detalleImagen").src = producto.imagen;
+
+
     } else {
-        console.error("Producto no encontrado");
+        window.alert("Producto no encontrado");
+        window.location.replace("/tp-dos/client/index.html");
     }
 });

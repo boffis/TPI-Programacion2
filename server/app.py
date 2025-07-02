@@ -70,33 +70,16 @@ def usuarios():
     else:
         return render_template("usuarios.html", usuarios=lista)
 
-@app.route("/usuario/<int:id>", methods=["GET"])
-def usuario_por_id(id):
-    usuario = Usuario.query.get(id)
-    
-    if not usuario:
-        # Devuelve 404 si no existe
-        return jsonify({"error": "Usuario no encontrado"}), 404
-    
-    pedidos_data = []
-    for p in usuario.pedidos:
-        productos_nombres = [prod.nombre for prod in p.productos]
-        pedidos_data.append({
-            "id": p.id,
-            "productos": productos_nombres
-        })
-        
-    datos = {
-        "id": usuario.id,
-        "nombre": usuario.nombre,
-        "email": usuario.email,
-        "pedidos": [{"id": p.id, "productos":pedidos_data} for p in usuario.pedidos]
-    }
-    
-    return jsonify(datos)
-
 @app.route("/crear_usuario", methods=["POST"])
 def api_crear_usuario():
+    # llega
+    # {
+    #     (str)nombre:nombre,
+    #     (str)email:email,
+    #     (str)contraseña:contraseña
+    # }
+    # devuelve
+    # {"mensaje": "Usuario creado correctamente", "id": nuevo_usuario.id}
     data = request.get_json()
     nombre = data.get("nombre")
     email = data.get("email")
@@ -114,25 +97,36 @@ def api_crear_usuario():
 
     return jsonify({"mensaje": "Usuario creado correctamente", "id": nuevo_usuario.id}), 201
 
+
 @app.route("/borrar_usuario/<int:id>", methods=["POST"])
 def borrar_usuario(id):
     usuario = Usuario.query.get_or_404(id)
-    # Borro pedidos relacionados
-    Pedido.query.filter_by(usuario_id=usuario.id).delete()
+
+    # borra los pedidos y sus relaciones
+    for pedido in usuario.pedidos:
+        db.session.delete(pedido)
+
     db.session.delete(usuario)
     db.session.commit()
-    return redirect(url_for("usuarios"))
+
+    if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
+        return jsonify({"mensaje": "Usuario borrado"}), 201
+    else:
+        return redirect(url_for("usuarios"))
+
 
 @app.route("/crear_pedido", methods=["POST"])
 def crear_pedido():
+    # le llega un id de usuario y una lista de id de productos
+    # a partir de esto hace las relaciones
     data = request.get_json()
     usuario_id = data.get("usuario_id")
     productos = data.get("productos")
-
+    print(productos)
     if not usuario_id or not productos or not isinstance(productos, list):
         return jsonify({"error": "Datos inválidos"}), 400
 
-    usuario = Usuario.query.get(usuario_id)
+    usuario = db.session.get(Usuario,usuario_id)
     if not usuario:
         return jsonify({"error": "Usuario no encontrado"}), 404
 
@@ -142,9 +136,9 @@ def crear_pedido():
 
     pedido = Pedido(usuario_id=usuario.id)
     pedido.productos = nuevos_productos
-
+    print(pedido.id)
     db.session.add(pedido)
-    db.session.flush()  # fuerza que se asigne un ID antes de relacionar
+    db.session.flush()  # crea un id antes de relacionarlo
     db.session.commit()
 
     return jsonify({
@@ -163,14 +157,15 @@ def crear_producto():
         nombre = request.form.get("nombre")
         valor = request.form.get("precio")
         imagen = request.form.get("imagen")  
-        # Validación básica
+
+        # No deberia nunca entrar aca
         if not nombre or not valor:
             return "Faltan datos", 400
         
         try:
             valor = int(valor)
         except ValueError:
-            return "Precio inválido", 400  # Crear y guardar producto
+            return "Precio inválido", 400  
         
         nuevo_producto = Producto(nombre=nombre, valor=valor, imagen=imagen)
         db.session.add(nuevo_producto)
@@ -178,9 +173,11 @@ def crear_producto():
         
         return redirect(url_for("productos"))  # Redirige a la lista de productos
     
-@app.route("/borrar_productos/<int:id>", methods=["POST"])
-def borrar_productos(id):
+@app.route("/borrar_producto/<int:id>", methods=["POST"])
+def borrar_producto(id):
     producto = Producto.query.get_or_404(id)
+    for pedido in producto.pedidos:
+        pedido.productos.remove(producto)
     db.session.delete(producto)
     db.session.commit()
     return redirect(url_for("productos"))
@@ -200,30 +197,40 @@ def modificar_producto(id):
     return render_template("modificar_producto.html", producto=producto)
 
 
-@app.route("/borrar_productos/<int:id>", methods=["GET", "DELETE"])
-def borrar_producto():
-    return None
 
 @app.route("/login", methods=["POST"])
 def login():
+    # recibe email y contraseña
+    # chequea que el email y contraseña existan
+    # check que la contraseña sea igual a la del usuario del mismo mail
+    # devuelve resto de los datos el usuario
     data = request.get_json()
 
     email = data.get("email")
     contrasenia = data.get("contrasenia")
 
     if not email or not contrasenia:
-        return jsonify({"mensaje": "Faltan datos"}), 400
+        return jsonify({"error": "Faltan datos"}), 400
 
     usuario = Usuario.query.filter_by(email=email).first()
-
+        
     if usuario and usuario.contrasenia == contrasenia:
+
+        pedidos_data = []
+        for p in usuario.pedidos:
+            productos_nombres = [{"nombre":prod.nombre,"id":prod.id} for prod in p.productos]
+            pedidos_data.append({
+                "id": p.id,
+                "productos": productos_nombres
+            })
         return jsonify({
             "mensaje": "Login exitoso",
             "usuario_id": usuario.id,
-            "nombre": usuario.nombre
+            "nombre": usuario.nombre,
+            "pedidos": pedidos_data
         }), 200
     else:
-        return jsonify({"mensaje": "Email o contraseña incorrectos"}), 401
+        return jsonify({"error": "Email o contraseña incorrectos"}), 401
 
 # Por las dudas :p
 @app.route("/reset_db")
